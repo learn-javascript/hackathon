@@ -1,0 +1,13 @@
+
+// todos
+
+* save world state to mongoDB on an interval
+
+* 
+//notes
+Rain Generetor
+ - Create max size(no edge nodes will go past this point)
+ - Start creating clouds towards that point
+ - Randomly roll a chance to move the new point to somwhere else
+ - Repeat until growth limit
+ - Resize will simple remove a randome edge node

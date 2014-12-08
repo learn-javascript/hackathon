@@ -1,0 +1,35 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>game of life mmo</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="debug-ui">
+        <div class="controls">
+            <button class="rewind">Rewind</button>
+            <button class="pause-play">Pause</button>
+            <button class="fastForward">Foward</button>
+            <span class="history" style="color:white"></span>
+        </div>
+        <div id="selected-tile">
+            
+        </div>
+    </div>
+    <div id="canvas-area">
+        <!--canvas is inserted here-->
+    </div>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="reqwest.min.js"></script>
+    <script type="text/javascript" src="/lib/underscore.min.js"></script>
+    <script type="text/javascript" src="/lib/events.js"></script>
+    <script type="text/javascript" src="/lib/pixi.dev.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="rendererX.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="debug.js"></script>
+</body>
+</html>

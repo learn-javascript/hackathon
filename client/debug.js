@@ -7,6 +7,7 @@
         this.historyEl = this.debugUi.querySelector('.history')
         var self = this;
         Events.on('Canvas:tile:clicked', function(tile, x, y){
+            console.log(x,y)
             console.log(self.getTileHistory(x,y,0))
         })
         Events.on('World:fetched', function(){
@@ -46,17 +47,15 @@
     }
     
     Debug.prototype.play = function(){
-        this.playTimeout = setTimeout(function(){
             App.debug.historyLocation++
             var w = App.worldHistory[App.debug.historyLocation]
             App.renderWorld(w)
-            this.updateHistoryText()
+            App.debug.updateHistoryText()
             if(w === App._latestWorld) {
                 App.paused = false
                 return
             }
-            setTimeout(App.debug.play)
-        }, 500)
+            setTimeout(App.debug.play, 500)
     }
     
     Debug.prototype.rewind = function(far){

@@ -1,0 +1,89 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>game of life mmo</title>
+    <link rel="stylesheet" href="/lib/chartist.css" type="text/css" />
+    <link rel="stylesheet" href="/lib/smoke.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="font-awesome.min.css">
+</head>
+<body>
+
+    <div id="debug-ui">
+        <div class="controls">
+            <button class="rewind">Rewind</button>
+            <button class="pause-play">Pause</button>
+            <button class="fastForward">Foward</button>
+            <span class="history" style="color:white"></span>
+        </div>
+        <div id="selected-tile">
+
+        </div>
+    </div>
+    <div id="canvas-area">
+        <!--canvas is inserted here-->
+    </div>
+    
+        <section class="bottom-bar">
+    	<div class="brand">
+    		<h1>Lyfe</h1>
+    	</div>
+    	<ul class="game-info">
+		    <li><span>Ping:</span> 34</li>
+		    <li><span>Nick:</span> jabronie</li>
+	    </ul>
+    	<nav class="game-nav">
+            <ul class="tabs">
+            	<li>
+            	    <a id="nick-btn" href="#"><i class="fa fa-at fa-2x"></i></a>
+            	    <!--<div class="nick-form">-->
+            	    <!--    <input type="text" name="nick"/>-->
+            	    <!--    <button class="change-nick">Change</button>-->
+            	    <!--</div>-->
+        	    </li>
+                <li><a id="chat-btn" href="#"><i class="fa fa-comments-o fa-2x"></i></a></li>
+                <li><a id="stats-btn" href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+            </ul>
+        </nav>
+    </section>
+    
+    <section id="chat">
+    	<div class="container">
+    		<div class="messages">
+
+    		</div>
+    		<div class="input">
+    			<input type="text" class="chat-input">
+    			<a class="send-msg" href="#">Send</a>
+    		</div>
+    	</div>	
+    </section>
+    
+    <section id="stats">
+        <div class="container">
+            <h2>Game Stats</h2>
+            <div class="stats-box">
+                <ul>
+                    <li><span class="stat">Average Vegetation Density:</span> 40</li>
+                    <li><span class="stat">Entity Count:</span> 530</li>
+                    <li><span class="stat">Dead Entities:</span> 84</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="reqwest.min.js"></script>
+    <script type="text/javascript" src="/lib/smoke.js"></script>
+    <script type="text/javascript" src="/lib/underscore.min.js"></script>
+    <script type="text/javascript" src="/lib/events.js"></script>
+    <script type="text/javascript" src="/lib/pixi.dev.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="rendererX.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="debug.js"></script>
+    <script type="text/javascript" src="hack.js"></script>
+</body>
+</html>

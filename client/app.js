@@ -15,6 +15,6 @@
         normalizedY = Math.floor(normalizedY / tileInfo.tileSize);
         if(normalizedX < 0 || normalizedX > length) return;
         if(normalizedY < 0 || normalizedY > length) return;
-        Events.trigger('Canvas:tile:clicked', App.world[normalizedY][normalizedX], normalizedX, normalizedY);
+        Events.trigger('Canvas:tile:clicked', App.world[normalizedY][normalizedX], normalizedX, normalizedY-1);
     },false)
 }())

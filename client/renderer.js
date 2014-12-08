@@ -10,6 +10,7 @@ window.app.renderer = (function () {
         $canvas.height = $container.offsetHeight
         if(lastWorld) render(lastWorld)
     }
+
     window.addEventListener('resize', onresize)
     onresize()
     //this name fucking sucks
@@ -38,7 +39,6 @@ window.app.renderer = (function () {
           , size = tileRenderInfo.size
           , topPadding = tileRenderInfo.topPadding
           , leftPadding = tileRenderInfo.leftPadding
-        
 
         for(var i=0; i<length; i++) {
             for(var j=0; j<length; j++) {
@@ -49,11 +49,11 @@ window.app.renderer = (function () {
                 //ctx.fillStyle = density<1 ? 'white' : 'hsl(' + (40 + density) + ', 100%, 50%)'
                 ctx.fillStyle = getColor(density)
                 //console.log(getColor(density))
-                ctx.fillRect(i*tileSize+leftPadding, topPadding + j*tileSize, tileSize-1, tileSize-1)
+                ctx.fillRect(j*tileSize+leftPadding, topPadding + i*tileSize, tileSize-1, tileSize-1)
 
-                if(tile.entity && tile.entity.alive) {
-                    ctx.fillStyle = 'rgba(0, 0, 0, 1.0)'
-                    ctx.fillRect(i*tileSize+leftPadding + 5, topPadding + j*tileSize + 5, tileSize / 2, tileSize / 2)
+                if(tile.entity) {
+                    ctx.fillStyle = 'rgb(0, 0, 0)'
+                    ctx.fillRect(j*tileSize+leftPadding + ~~(tileSize/4), topPadding + i*tileSize + ~~(tileSize/4), ~~(tileSize / 2), ~~(tileSize / 2))
                 }
 
             }

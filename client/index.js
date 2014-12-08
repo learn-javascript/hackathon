@@ -1,12 +1,12 @@
 
 ;(function () {
 
-    var socket = window.io()
+    var socket = window.socket = window.io()
     var App = window.app;
     App.worldHistory = [];
     App.paused = false;
     getWorld();
-    
+
     function getWorld(failCount){
         if(failCount > 4){
             console.log("whut")
@@ -21,7 +21,7 @@
         });
     }
     App.getWorld = getWorld
-    
+
     function updateWorldQueue(data){
         App.worldHistory.push(data)
         App._latestWorld = data;
@@ -29,7 +29,7 @@
         setTimeout(getWorld, 1000)
         if(!App.paused) renderWorld()
     }
-    
+
     function renderWorld(world){
         // maybe some interpolation logic will go here
         var w;
@@ -39,5 +39,10 @@
         App.world = w;
     }
     App.renderWorld = renderWorld
+
+    Events.on('tileClick', function (tile, x, y) {
+        console.log(x, y, tile)
+        socket.emit('addEntity', {x: x, y: y})
+    })
 
 })()

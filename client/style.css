@@ -6,6 +6,8 @@ html, body {
     width: 100%;
     overflow: hidden;
     background: black;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
 }
 
 #canvas-area {
@@ -13,3 +15,198 @@ html, body {
     width: 100%;
     overflow: hidden;
 }
+
+/*debug stuff*/
+#selected-tile{
+    color: white;
+}
+
+
+input[type="text"] {
+    line-height: 24px;
+    border: 0;
+}
+input[type="text"]:focus {
+    outline: none;
+}
+
+.open {
+    -webkit-transition: all 200ms ease-out;
+    -moz-transition: all 200ms ease-out;
+    transition: all 200ms ease-out;
+    -webkit-transform: translate3d(0, 0, 0) !important;
+    -moz-transform: translate3d(0, 0, 0) !important;
+    -ms-transform: translate3d(0, 0, 0) !important;
+    -o-transform: translate3d(0, 0, 0) !important;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+.active {
+    background: #EA9866 !important;
+    border-radius: 3px;
+    -webkit-transition: all 200ms ease-in-out;
+    -moz-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
+}
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    height: 40px;
+    width: 100%;
+    background: #E68163;
+    z-index: 20;
+}
+
+.game-nav {
+}
+
+.brand {
+    float: left;
+}
+
+.brand h1 {
+    margin: 0;
+    padding: 5px 15px;
+    color: white;
+    letter-spacing: 5px;
+    font-weight: normal;
+}
+
+.controls {
+    float: left;
+}
+
+.tabs {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    float: right;
+    margin: 0 15px;
+}
+
+.tabs li {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.tabs a {
+    display: block;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    padding: 5px;
+}
+
+#chat, #stats {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 325px;
+    background: #E68163;
+    -webkit-transition: all 200ms ease-out;
+    -moz-transition: all 200ms ease-out;
+    transition: all 200ms ease-out;
+    -webkit-transform: translate3d(325px, 0, 0);
+    -moz-transform: translate3d(325px, 0, 0);
+    -ms-transform: translate3d(325px, 0, 0);
+    -o-transform: translate3d(325px, 0, 0);
+    transform: translate3d(325px, 0, 0);
+}
+
+#chat .container {
+    height: 100vh;
+}
+
+#chat .messages {
+    height: 88vh;
+    max-height: 90vh;
+    width: 98%;
+    margin: 0 auto;
+    background: #EA9866;
+}
+
+#chat .input {
+    padding: 2vh 0 0;
+    max-height: 10%;
+    text-align: center;
+}
+
+
+#chat input {
+    width: 80%;
+}
+
+.input .send-msg {
+    position: relative;
+    top: 1px;
+    text-decoration: none;
+    border: 2px solid white;
+    color: white;
+    padding: 2px 7px;
+}
+
+.send-msg:hover {
+    background: white;
+    color: #FFA02E;
+    transition: all 200ms ease-in-out;
+}
+
+.messages {
+    overflow: scroll;
+}
+
+.message {
+    margin-top: 4px;
+}
+
+.message {
+    padding: 3px;
+    color: white;
+    font-weight: 100;
+    letter-spacing: 1px;
+    font-size: 13px;
+}
+
+.message .nick {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: -.5px;
+}
+
+.game-info {
+    float: left;
+    margin: 10px 25px;
+}
+
+.game-info li {
+    display: inline-block;
+    color: white;
+    font-size: 12px;
+    margin-left: 8px;
+}
+
+.game-info span {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+#stats h2 {
+    color: white;
+    text-transform: uppercase;
+    font-size: 22px;
+    text-align: center;
+}
+
+/*.nick-form {*/
+/*    width: 0;*/
+/*    float: left;*/
+/*}*/
+
+/*.nick-form.change {*/
+/*    width: 175px;*/
+/*    transition: width 200ms ease-in-out;*/
+/*}*/

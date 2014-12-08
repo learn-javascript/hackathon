@@ -26,6 +26,14 @@ module.exports = {
         }
         return neighbors
     },
+    getCardinalNeighbors : function(arr, sx, sy){
+        var neighbors = []
+        if(arr[sy-1][sx]) neighbors.push(arr[sy-1][sx])
+        if(arr[sy+1][sx]) neighbors.push(arr[sy+1][sx])
+        if(arr[sy][sx-1]) neighbors.push(arr[sy+1][sx-1])
+        if(arr[sy][sx+1]) neighbors.push(arr[sy+1][sx+1])
+        return neighbors
+    },
     create2dArray : function create2dArray(width, height){
         var ret = []
         for(var i = 0; i < height; i++){

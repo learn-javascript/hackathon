@@ -3,19 +3,13 @@ var world = require('./world')
 var genWorld = require('./genWorld')
 var GameUtil = require('./gameUtil')
 var Entity = require('./entity')
-var WorldEvents = require('./worldEvents')
-var RainEvent = WorldEvents.RainEvent
 
 var game = {}
 
-
 module.exports = {
     tick: tick,
-    action: action,
-    addEntity: addEntity
+    action: action
 }
-
-var addEntityQueu = []
 
 // init world
 game.world = genWorld(100, 100)
@@ -29,11 +23,6 @@ function tick (done) {
 
     game.tick()
 
-    while(addEntityQueu.length>0){
-        var pos = addEntityQueu.pop()
-        game.world[pos.y][pos.x].entity = new Entity()
-    }
-
     // done doing things
     world.set(game.world)
     done()
@@ -43,10 +32,6 @@ function tick (done) {
 
 function action (action) {
     //to-do
-}
-
-function addEntity (x, y) {
-    addEntityQueu.push({x:x, y:y})
 }
 
 function cacheNeighbors(){
@@ -69,7 +54,6 @@ function handleAi(tile){
 }
 
 game.tick = function() {
-    this.worldEvents.tick()
     for(var y = 0; y < game.world.length; y++) {
         for(var x = 0; x < game.world[y].length; x++) {
             var tile = game.world[y][x];
@@ -78,71 +62,55 @@ game.tick = function() {
             game.neighbors[y][x].forEach(function(t){
                 if(t.entity) {
                     tile.livingNeighbors++
+//                    t.entity.age++
+                } else {
+                    tile.domesticity = Math.max(tile.domesticity - 1,0)
                 }
                 if(t.vegetation.density > 0) {
                     tile.habitatNeighbors++
                 }
             });
-            //generit tile processing
             if(tile.entity) {
                 tile.entity.age++
                 tile.domesticity++
                 tile.entity.hunger-- // tile.entity.age * 5
                 tile.vegetation.density -= Math.floor((Math.random() * tile.domesticity)) + 1 
-            } else {
-                tile.domesticity = Math.max(tile.domesticity - 1,0)
-            }
+            } 
             
-            //entity logic stuff
             if(tile.entity && tile.entity.hunger < 1) {
                 tile.entity = false
-            }  else if(tile.entity) { //entity isn't dead it can either move or eat
-                if(Math.pow(100 - tile.entity.hunger, 2) / 100 >= Math.pow(Math.floor(Math.random() * 100) + 1,2) / 100) { //if hunger theshhold is crossed
+            }
+            if(tile.entity && Math.pow(100 - tile.entity.hunger, 2) / 100 >= Math.pow(Math.floor(Math.random() * 100) + 1)) {
                     var volume = Math.min(Math.floor((Math.random() * (100 - tile.entity.hunger))) + 1,tile.vegetation.density)
                     tile.entity.hunger += volume
                     tile.vegetation.density -= volume
-                } else if(tile.vegetation.density < game.getHabitatDensity(y,x)) {
-                    var bestNeighbor = game.neighbors[y][x].reduce(function(p,c,i,arr) {
-                        return p.vegetation.density > c.vegetation.density || c.entity ? p : c
-                    },tile)
-                                        
-                    if(bestNeighbor != tile) {
-                        bestNeighbor.entity = tile.entity
-                        tile.entity = false
-                    }
-                } else if(tile.livingNeighbors > 3) {
-                    tile.enitty = false
-                } else if(tile.livingNeighbors == 3 && tile.entity.hunger > 50) {
-                    var target = game.neighbors[y][x].reduce(function(p,c,i,arr) {
-                        return p.vegetation.density > c.vegetation.density || c.entity ? p : c
-                    },tile)
-                    
-                    if(target != tile) {
-                        target.entity = new Entity()
-                        target.entity.hunger = 50
-                        tile.entity.hunger = Math.max(tile.entity.hunger - 50, 0)
-                        if(tile.entity.hunger < 1) {
-                            tile.entity.hunger = false
-                        }
-                    }
-                }
-            }
-
+            }  
+            
             //vegetation stuff is seperate from entity stuff?
-            if(!tile.entity) {
-                if(tile.domesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.density > game.getHabitatDensity(y,x)) {
-                    tile.domesticity-= Math.floor(game.getHabitatDensity % tile.habitatNeighbors)
-                } else if(tile.domesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.density <= game.getHabitatDensity(y,x)) {
-                    tile.domesticity++
-                }else if(tile.domesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.desnity === 0) {
-                    tile.domesticity++
-                } else if(tile.domesticity === 0) {
-                    tile.vegetation.density++
-                } else if(tile.domesticity > 0) {
-                    tile.vegetation.density -= Math.floor(Math.random() * tile.domesticity) + 1
+            if(tile.domesticity === 0) {
+                tile.vegetation.density++
+            }
+/**
+            if(tile.deomesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.density > game.getHabitatDensity(y,x)) {
+               tile.vegetation.density -= game.getHabitatDensity % tile.habitatNeighbors
+            } else if(tile.domesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.density ++ //+= Math.floor(game.getHabitatDensity % tile.habitatNeighbors)=== 0) {
+                tile.vegetation.density++
+**/
+/**
+            } else if(tile.domesticity > 0) {
+                tile.vegetation.density -= Math.floor(Math.random() * tile.domesticity) + 1
+**/
+/**            }
+**/            
+            
+            if(tile.eventData && tile.eventData.rain && tile.eventData.rain.active) {
+                var rain = tile.eventData.rain
+                if(rain.power  + rain.age < 50) {
+                    tile.vegetation.density += 3 + Math.floor(Math.random() * rain.power)
+                } else {
+                    tile.vegetation.desity--
                 }
             }
-
             tile.vegetation.density = Math.floor((Math.random() * 10)) + tile.vegetation.density - 5
             tile.vegetation.density = tile.vegetation.density > 100 ? 100 : tile.vegetation.density
             tile.vegetation.density = tile.vegetation.density < 0 ? 0 : tile.vegetation.density
@@ -201,6 +169,7 @@ game.getHabitatDensity = function(y,x) {
     return Math.round(habitatDensity / neighbors)
 }
 
-game.worldEvents = new WorldEvents.WorldEvents(game)
-var re = new RainEvent(game)
-game.worldEvents.add(re)
+game.addEntity = function(x,y){
+    game.world[y][x].entity = new Entity()
+    game.world[y][x].hunger = Math.floor(Math.random() * 100) + 1
+}

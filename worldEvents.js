@@ -44,21 +44,28 @@ WorldEvents.prototype.remove = function(e){
 
 function RainEvent(game){
     this.game = game
+    this.age = 0
     this.init()
     console.log(this.center)
 }
 
 RainEvent.prototype.tick = function(){
-    return
-    this.life--
+    this.life-=20
     if(this.life > 0){
-        if( Math.pow(Math.ceil(this.life * 0.90), 2) / 100 >= _.random(1,100)){
-            this.createCloud()
-            console.log("CLOUD")
+        if( Math.random() > 0.3){
+            this.updateClouds()
+            var cloudCount = _.random(0, 5)
+            if(cloudCount > this.nonCloudNodes.length) cloudCount = this.nonCloudNodes.length
+            while(cloudCount > 0){
+                this.createCloud()
+                cloudCount--
+            }
+        }else{
+            this.nonCloudNodes.pop()
         }
     }else{
-        if(this.nodes.length > 0){
-            this.nodes.pop()
+        if(this.cloudNodes.length > 0){
+            this.cloudNodes.pop()
         }else{
             console.log("DEAD")
             this.game.worldEvents.remove(this)
@@ -67,38 +74,32 @@ RainEvent.prototype.tick = function(){
 }
 
 RainEvent.prototype.init = function(){
-    this.life = _.random(40, 100)
+    this.life = _.random(15, 45)
     var startY = _.random(0, this.game.world.length-1)
     var startX = _.random(0, this.game.world[0].length-1)
     this.center = this.game.world[startY][startX]
-    this.size = _.random(1, 3)
-    this.nodes = GameUtil.getNeighborsScale(this.game.world, startX, startY, this.size)
-    this.leftBound = Math.max(this.center.x - this.size, 0)
-    this.topBound = Math.max(this.center.y - this.size, 0)
-    this.rightBound = Math.max(this.center.x + this.size, this.game.world.length-1)
-    this.bottomBound = Math.max(this.center.y + this.size, this.game.world.length-1)
-    this.nodes.push(this.center)
-    this.edgeNodes = this.nodes.slice()
+    this.size = _.random(2, 10)
+    this.nonCloudNodes = GameUtil.getNeighborsScale(this.game.world, startX, startY, this.size)
+    this.nonCloudNodes = _.shuffle(this.nonCloudNodes)
+    this.cloudNodes = []
+    this.life += (this.size * 8) * 0.25
+    this.life = ~~this.life
+}
+RainEvent.prototype.updateClouds = function(){
+    var self = this
+    this.cloudNodes.forEach(function(cn){
+        cn.eventData.rain.age++
+        self.totalAge++
+    })
 }
 
+
 RainEvent.prototype.createCloud = function(){
-    console.log("MA CLOUD")
-    var nodeInd = _.random(0, this.edgeNodes.length-1)
-    var edgeNode = this.edgeNodes[nodeInd]
-    var edges = this.getEdges(this.game.world, edgeNode)
-    if(edges.length === 0){
-        this.edgeNodes.splice(nodeInd, 1)
-        return
-    }
-    console.log(edges)
-    var selectedNode = edges[_.random(0, edges.length-1)]
-    selectedNode.eventData.rain = {
-        power : _.random(10, 100),
-        active : true
-    }
-    // Check if selected node is an edge
-    if(getEdges(selectedNode).length > 0) this.edgeNodes.push(selectedNode)
-    if(edges.length === 1) this.edgeNodes.splice(nodeInd, 1)
+    if(this.nonCloudNodes.length === 0) return
+    var c = this.nonCloudNodes.pop()
+    c.eventData.rain.active = true
+    c.eventData.rain.power = _.random(10,50)
+    this.cloudNodes.push(c)
 }
 //undefined/null nodes edges as far as we are concerned
 //tiles with a rain id not ours is also an edge

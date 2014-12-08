@@ -233,7 +233,13 @@ window.app.renderer = (function () {
             )
         }
         if(eventData.rain === true){
-            console.log("raining")
+            tile.beginFill(0xFF0000)
+            tile.drawRect(
+                tile.tileX * this.tileSize + (this.tileSize / 4),
+                tile.tileY * this.tileSize + (this.tileSize / 4),
+                this.tileSize/2,
+                this.tileSize/2
+            )
         }
 
         tile.endFill()

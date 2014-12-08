@@ -32,6 +32,6 @@ function Tile() {
     this.domesticity = 0
     this.id = uid++;
     this.eventData = {
-        rain : {power : 0, active : false}
+        rain : {power : 0, active : false, age : 0}
     }
 }

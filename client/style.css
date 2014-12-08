@@ -21,11 +21,16 @@ html, body {
     color: white;
 }
 
+ul {
+    list-style-type: none;
+    padding: 0;
+}
 
 input[type="text"] {
     line-height: 24px;
     border: 0;
 }
+
 input[type="text"]:focus {
     outline: none;
 }
@@ -42,7 +47,7 @@ input[type="text"]:focus {
 }
 
 .active {
-    background: #EA9866 !important;
+    background: #4CA179 !important;
     border-radius: 3px;
     -webkit-transition: all 200ms ease-in-out;
     -moz-transition: all 200ms ease-in-out;
@@ -67,8 +72,9 @@ input[type="text"]:focus {
 
 .brand h1 {
     margin: 0;
-    padding: 5px 15px;
+    padding: 6px 15px;
     color: white;
+    background: #4CA179;
     letter-spacing: 5px;
     font-weight: normal;
 }
@@ -201,12 +207,32 @@ input[type="text"]:focus {
     text-align: center;
 }
 
-/*.nick-form {*/
-/*    width: 0;*/
-/*    float: left;*/
-/*}*/
+.stat-box {
+    /*width: 90%;*/
+    /*margin: 0 auto;*/
+    /*padding: 5px;*/
+    /*background: #E;*/
+    /*border-radius: 3px;*/
+    font-size: 13px;
+    color: white;
+}
 
-/*.nick-form.change {*/
-/*    width: 175px;*/
-/*    transition: width 200ms ease-in-out;*/
-/*}*/
+.stat-box .stat {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: .5px;
+    font-weight: bold;
+}
+
+.stat-box .value {
+    background: #E68163;
+    padding: 5px;
+    border-radius: 3px;
+    margin-left: 3px;
+}
+
+.stat-box li {
+    margin-bottom: 5px;
+    padding: 10px;
+    background: #EA9866;
+}

@@ -34,7 +34,7 @@ io.on('connection', function (socket) {
     })
 
     socket.on('addEntity', function (data) {
-        game.addEntity(data.x, data.y)
+        game.game.addEntity(data.x, data.y)
     })
 
 })

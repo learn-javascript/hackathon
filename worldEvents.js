@@ -8,6 +8,7 @@ function WorldEvents(game){
 }
 module.exports.WorldEvents = WorldEvents
 module.exports.RainEvent = RainEvent
+module.exports.DroughtEvent = DroughtEvent
 
 
 WorldEvents.prototype.tick = function(){
@@ -90,6 +91,12 @@ RainEvent.prototype.updateClouds = function(){
     this.cloudNodes.forEach(function(cn){
         cn.eventData.rain.age++
         self.totalAge++
+        var rain = cn.eventData.rain
+        if(rain.power + rain.age < 50) {
+            cn.vegetation.density += 3 + Math.floor(Math.random() * rain.power)
+        } else {
+            cn.vegetation.desity--
+        }
     })
 }
 
@@ -101,41 +108,30 @@ RainEvent.prototype.createCloud = function(){
     c.eventData.rain.power = _.random(10,50)
     this.cloudNodes.push(c)
 }
-//undefined/null nodes edges as far as we are concerned
-//tiles with a rain id not ours is also an edge
-RainEvent.prototype.getEdges = function(arr, node){
-    var edges = []
-    //check left node
-    if(node && this.emptyNode(arr[node.y][node.x-1]) ){
-        edges.push([node.y][node.x-1])
-    }
-    //check right
-    if(node && this.emptyNode(arr[node.y][node.x+1]) ){
-        edges.push([node.y][node.x+1])
-    }
-    //check up
-    if(node && this.emptyNode(arr[node.y-1][node.x]) ){
-        edges.push([node.y-1][node.x])
-    }
-    //check down
-    if(node && this.emptyNode(arr[node.y+1][node.x]) ){
-        edges.push([node.y+1][node.x])
-    }
-    console.log(edges)
-    return edges
-}
 
-RainEvent.prototype.emptyNode = function(node){
-    if(!node) return false
-    if(node.eventData.rain.active) return false
-    if(node.x > this.rightBound || node.x < this.leftBound ) return false
-    if(node.y > this.bottomBound || node.y < this.topBound) return false
-    return true
-}
 
 RainEvent.prototype.selectNextTile = function(){
     var t = _.random(0, this.edgeNodes)
 }
+
+
+function DroughtEvent(game){
+    this.game = game
+    this.age = 0
+    this.init()
+    console.log(this.center)
+}
+
+DroughtEvent.prototype.tick = function(){
+    this.life--
+    var i = this.livingNodes.length-1
+    while(i >= 0){
+        var n = this.livingNodes[i]
+        n.age++
+    }
+}
+
+
 /*
 function* createSpiral(arr, sx, sy){
         // (di, dj) is a vector - direction in which we move right now

@@ -8,7 +8,8 @@ var game = {}
 
 module.exports = {
     tick: tick,
-    action: action
+    action: action,
+    game : game
 }
 
 // init world
@@ -62,75 +63,87 @@ game.tick = function() {
             game.neighbors[y][x].forEach(function(t){
                 if(t.entity) {
                     tile.livingNeighbors++
-//                    t.entity.age++
-                } else {
-                    tile.domesticity = Math.max(tile.domesticity - 1,0)
                 }
                 if(t.vegetation.density > 0) {
                     tile.habitatNeighbors++
                 }
             });
+            
+            //update tile
             if(tile.entity) {
                 tile.entity.age++
                 tile.domesticity++
-                tile.entity.hunger-- // tile.entity.age * 5
-                tile.vegetation.density -= Math.floor((Math.random() * tile.domesticity)) + 1 
-            } 
+                tile.entity.hunger -= tile.entity.age
+            } else {
+                tile.domesticity = Math.max(tile.domesticity - 1,0)
+            }
             
+            //update entity
             if(tile.entity && tile.entity.hunger < 1) {
                 tile.entity = false
-            }
-            if(tile.entity && Math.pow(100 - tile.entity.hunger, 2) / 100 >= Math.pow(Math.floor(Math.random() * 100) + 1)) {
+            } else if(tile.entity && game.getHabitatDensity(y,x) < 1) {
+                tile.entity = false
+            } else if(tile.entity && tile.livingNeighobrs > 3) {
+                tile.entity = false
+            } else if(tile.entity) {
+                if(Math.pow(100 - tile.entity.hunger, 2) / 100 >= Math.pow(Math.floor(Math.random() * 100) + 1,2) / 100) {
                     var volume = Math.min(Math.floor((Math.random() * (100 - tile.entity.hunger))) + 1,tile.vegetation.density)
                     tile.entity.hunger += volume
                     tile.vegetation.density -= volume
-            }  
-            
-            //vegetation stuff is seperate from entity stuff?
-            if(tile.domesticity === 0) {
-                tile.vegetation.density++
-            }
-/**
-            if(tile.deomesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.density > game.getHabitatDensity(y,x)) {
-               tile.vegetation.density -= game.getHabitatDensity % tile.habitatNeighbors
-            } else if(tile.domesticity === 0 && tile.vegetation.habitatNeighbors > 5 && tile.vegetation.density ++ //+= Math.floor(game.getHabitatDensity % tile.habitatNeighbors)=== 0) {
-                tile.vegetation.density++
-**/
-/**
-            } else if(tile.domesticity > 0) {
-                tile.vegetation.density -= Math.floor(Math.random() * tile.domesticity) + 1
-**/
-/**            }
-**/            
-            
-            if(tile.eventData && tile.eventData.rain && tile.eventData.rain.active) {
-                var rain = tile.eventData.rain
-                if(rain.power  + rain.age < 50) {
-                    tile.vegetation.density += 3 + Math.floor(Math.random() * rain.power)
-                } else {
-                    tile.vegetation.desity--
+                } else if(tile.vegetation.density < game.getHabitatDensity(y,x)) {
+                    var bestNeighbor = game.neighbors[y][x].reduce(function(p,c,i,arr) {
+                        return p.vegetation.density > c.vegetation.density || c.entity ? p : c
+                    },tile)
+                    
+                    if(bestNeighbor != tile) {
+                        tile.entity.hunger -= Math.floor(Math.random() * 10) + 1
+                        bestNeighbor.entity = tile.entity
+                        tile.entity = false
+                    }
+                } else if(tile.liveNeighbors >= 1 && Math.floor(Math.random() * tile.entity.hunger) > 100 - tile.entity.hunger) {
+                    var bestNeighbor = game.neighbors[y][x].reduce(function(p,c,i,arr) {
+                        return p.vegetation.density > c.vegetation.density || c.entity ? p : c
+                    },tile)
+                    
+                    if(bestNeighbor != tile) {
+                        bestNeighbor.entity = new Entity()
+                        bestNeighbor.entity.hunger = Math.floor(Math.random() * tile.entity.hunger)
+                        tile.entity.hunger -= 50
+                    }
                 }
             }
+            
+            //update vegetation
+            if(tile.domesticity > 0) {
+                tile.vegetation.density--
+//                tile.vegetation.density -= Math.floor(Math.random() * tile.domesticity) + 1
+            } else {
+                tile.vegetation.density++
+            }
+
+            //update events
+
+
+            //give tile.vegetation.density some variation
             tile.vegetation.density = Math.floor((Math.random() * 10)) + tile.vegetation.density - 5
             tile.vegetation.density = tile.vegetation.density > 100 ? 100 : tile.vegetation.density
             tile.vegetation.density = tile.vegetation.density < 0 ? 0 : tile.vegetation.density
+            
+            //give tile.entity.hunger some variation
+            if(tile.entity) {
+                tile.entity.hunger = Math.floor((Math.random() * 10)) + tile.entity.hunger - 5
+                tile.entity.hunger = Math.min(100,tile.entity.hunger)
+                tile.entity.hunger = Math.max(0,tile.entity.hunger)
+            }
         }
     }
 }
 
-game.changeVector = function(vector) {
-
-
-    vector.x = Math.floor(Math.random() * 3) - 1
-    vector.y = vector.x === 0 ? Math.floor(Math.random() * 3) - 1 : 0
-
-
-    return vector
+game.addEntity = function(x,y){
+    game.world[y][x].entity = new Entity()
+    game.world[y][x].hunger = Math.floor(Math.random() * 100) + 1
 }
 
-game.createEvent = function(){
-    
-}
 game.countLivingNeighbors = function(y,x) {
     var livingNeighbors = 0
     for(var yIter = y - 1; yIter <= y + 1; yIter++) {
@@ -167,9 +180,4 @@ game.getHabitatDensity = function(y,x) {
         }
     }
     return Math.round(habitatDensity / neighbors)
-}
-
-game.addEntity = function(x,y){
-    game.world[y][x].entity = new Entity()
-    game.world[y][x].hunger = Math.floor(Math.random() * 100) + 1
 }

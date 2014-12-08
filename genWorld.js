@@ -10,10 +10,10 @@ module.exports = function (width, height) {
             map[i][j].y = i
             //randomly generate density as well!
             map[i][j].vegetation.density = (Math.floor(Math.random() * 100))
-            if(Math.floor(Math.random() * 100) % 100 < 15) {
-                map[i][j].entity = new Entity()
-                map[i][j].entity.hunger = Math.floor(Math.random() * 100) + 1
-            }
+//            if(Math.floor(Math.random() * 100) % 100 < 15) {
+//                map[i][j].entity = new Entity()
+//                map[i][j].entity.hunger = Math.floor(Math.random() * 100) + 1
+//            }
         }
     }
     return map
